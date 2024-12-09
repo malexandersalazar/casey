@@ -17,6 +17,50 @@ class ArticleWritingRequest:
     created_at: datetime = datetime.now()
 
 class ArticleWritingProcessor:
+    """
+    A processor class for generating AI-powered articles using news sources and semantic memory.
+
+    This class orchestrates the article writing process by gathering relevant news sources,
+    using vector search for context, and generating high-quality articles with AI. It handles
+    requests asynchronously and preserves generated content in semantic memory.
+
+    Attributes:
+    NEWS_VECTARA_CORPUS_KEY (str): Constant defining the corpus key for news articles.
+    client (Groq): Instance of Groq client for AI language processing.
+    groq_interaction_model_id (str): Model ID for article generation.
+    groq_notification_model_id (str): Model ID for notification messages.
+    telegram_service: Service for sending notifications.
+    news_service: Service for fetching news articles.
+    vectara_service: Service for vector search operations.
+    semantic_memory_module: Module for storing generated content.
+    content_queue (Queue): Queue for processing article requests asynchronously.
+
+    Example:
+    ```python
+    processor = ArticleWritingProcessor(
+        groq_api_key="your_key",
+        groq_interaction_model_id="model_id",
+        groq_notification_model_id="notification_model_id",
+        telegram_service=telegram_service,
+        news_service=news_service,
+        vectara_service=vectara_service,
+        semantic_memory_module=semantic_memory_module
+    )
+
+    # Handle an article writing request
+    response = processor.handle_content_request(
+        topic={
+            "main_topic": "AI Technology",
+            "subtopics": ["Machine Learning", "Neural Networks"],
+            "target_audience": "Technical professionals",
+            "context": "Recent developments",
+            "tone": "Professional",
+            "complexity": "Technical"
+        },
+        last_user_message="Write about recent AI breakthroughs"
+    )
+    ```
+    """
     NEWS_VECTARA_CORPUS_KEY = 'casey_news'
 
     def __init__(self, groq_api_key, groq_interaction_model_id, groq_notification_model_id, telegram_service, news_service, vectara_service, semantic_memory_module):

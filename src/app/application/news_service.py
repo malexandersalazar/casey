@@ -14,7 +14,31 @@ from fake_useragent import UserAgent
 from aiohttp_retry import RetryClient, ExponentialRetry
 
 class NewsService():
+    """
+    A service class for fetching and processing news articles using Bing News API and asynchronous web scraping.
 
+    This class combines Bing News search capabilities with high-performance parallel web scraping
+    to retrieve both news article URLs and their full content. It handles rate limiting,
+    concurrent connections, and content extraction with built-in error handling and retries.
+
+    Attributes:
+    bing_api_key (str): API key for Bing News search.
+    bing_session (requests.Session): Session object for Bing API requests.
+    bing_base_url (str): Base URL for Bing News API.
+    fast_news_scraper (FastNewsScraper): Async scraper instance for content retrieval.
+
+    Example:
+    ```python
+    service = NewsService(bing_api_key="your_key")
+    
+    # Search for news articles
+    articles = service.search_bing_news(
+        queries=["AI technology", "machine learning"],
+        count=5
+    )
+    # Returns list of articles with URLs and full text content
+    ```
+    """
     def __init__(self, bing_api_key: str):
         self.bing_api_key = bing_api_key
         self.bing_session = requests.Session()

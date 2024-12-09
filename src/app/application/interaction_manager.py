@@ -9,6 +9,48 @@ from .image_generation_processor import ImageGenerationProcessor
 from .social_media_composing_processor import SocialMediaComposingProcessor
 
 class InteractionManager:
+    """
+    A manager class for handling different types of user interactions and content creation requests.
+
+    This class serves as a central coordinator for processing various types of user requests,
+    including article writing, social media content, memes, images, videos, and general
+    conversation. It uses AI-powered intent detection to route requests to appropriate
+    specialized processors.
+
+    Attributes:
+      client (Groq): Instance of Groq client for AI language processing.
+      groq_interaction_model_id (str): Model ID for main interactions.
+      groq_notification_model_id (str): Model ID for notification messages.
+      article_writing_processor: Processor for article creation.
+      social_media_composing_processor: Processor for social media content.
+      meme_creation_processor: Processor for meme generation.
+      image_generation_processor: Processor for image creation.
+      video_creation_processor: Processor for video generation.
+      episodic_event_processor: Processor for handling personal events/memories.
+
+    Example:
+      ```python
+      manager = InteractionManager(
+          groq_api_key="your_key",
+          groq_interaction_model_id="model_id",
+          groq_notification_model_id="notification_model_id",
+          telegram_service=telegram_service,
+          news_service=news_service,
+          vectara_service=vectara_service,
+          imgflip_service=imgflip_service,
+          open_ai_service=open_ai_service,
+          runway_service=runway_service,
+          semantic_memory_module=semantic_memory_module
+      )
+
+      # Process a user message
+      result = manager.handle_message(
+          messages=conversation_history,
+          last_user_message="Write an article about AI",
+          intent_result=detected_intent
+      )
+      ```
+    """
     def __init__(self, groq_api_key, groq_interaction_model_id, groq_notification_model_id, telegram_service, news_service, vectara_service, imgflip_service, open_ai_service, runway_service, semantic_memory_module):
         self.client = Groq(api_key=groq_api_key)
         self.groq_interaction_model_id = groq_interaction_model_id

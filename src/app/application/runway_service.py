@@ -3,7 +3,31 @@ from runwayml import RunwayML
 
 
 class RunwayService:
+    """
+    A service class for interacting with RunwayML's API to generate videos from images and text prompts.
 
+    This class provides methods to create and retrieve AI-generated videos using RunwayML's
+    image-to-video generation capabilities. It handles the asynchronous nature of video
+    generation by providing methods to both initiate generation and poll for results.
+
+    Attributes:
+        api_secret (str): API secret key for authenticating with RunwayML services.
+        runway_ml_client (RunwayML): Instance of RunwayML client for API interactions.
+
+    Example:
+        ```python
+        service = RunwayService(api_secret="your_secret_key")
+        
+        # Start video generation
+        task_id = service.create_video(
+            prompt_image=image_data,
+            prompt_text="A serene lake with rippling water"
+        )
+        
+        # Retrieve the generated video
+        video_url = service.retrieve_video(task_id)
+        ```
+    """
     def __init__(self, api_secret: str):
         self.api_secret = api_secret
         self.runway_ml_client = RunwayML(api_key=api_secret)

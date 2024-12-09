@@ -4,7 +4,33 @@ from typing import Optional, Dict, List
 class ImgflipService:
     """
     A service class for generating memes using the Imgflip API.
+
+    This class provides methods to interact with the Imgflip API for retrieving meme templates
+    and generating memes with custom text. It supports filtering templates by text box count
+    and finding templates by name.
+
     Documentation: https://api.imgflip.com/
+
+    Attributes:
+        base_url (str): Base URL for the Imgflip API.
+        username (str): Imgflip account username for authentication.
+        password (str): Imgflip account password for authentication.
+
+    Example:
+        ```python
+        service = ImgflipService(username="your_username", password="your_password")
+        
+        # Get a list of two-box meme templates
+        templates = service.get_two_box_memes()
+        
+        # Create a meme
+        meme = service.create_meme(
+            template_id="181913649",
+            top_text="When the code works",
+            bottom_text="But you don't know why"
+        )
+        print(f"Generated meme URL: {meme['url']}")
+        ```
     """
     
     def __init__(self, username: str, password: str):

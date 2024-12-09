@@ -16,6 +16,50 @@ class VideoCreationRequest:
     created_at: datetime = datetime.now()
 
 class VideoCreationProcessor:
+    """
+    A processor class for handling video creation requests based on user inputs.
+    This class integrates with multiple services to generate AI-driven image 
+    and video content and communicates updates to the user through Telegram.
+
+    Attributes:
+        groq_client (Groq): The Groq client for processing AI-driven interactions.
+        groq_interaction_model_id (str): The model ID for generating prompts via Groq.
+        groq_notification_model_id (str): The model ID for generating notification messages.
+        telegram_service: A service for sending notifications to users via Telegram.
+        open_ai_service: A service for generating images based on prompts.
+        runway_service: A service for creating and retrieving videos based on generated images and prompts.
+        content_queue (Queue): A thread-safe queue for managing video creation requests.
+
+    Methods:
+        handle_content_request(topic, last_user_message):
+            Processes a user's request to generate video content by analyzing the topic 
+            and user message, queuing the request, and generating a response.
+        
+        __start_processing_thread():
+            Initializes a background thread to process requests from the queue.
+        
+        __detect_image_parameters(topic, user_message):
+            Analyzes user inputs to extract or infer parameters for image and video generation, 
+            using an AI interaction model.
+
+        __generate_processing_message(gen_params, last_user_message):
+            Generates a concise response to inform the user about the ongoing video creation process.
+
+        __process_content(request):
+            Processes a queued video creation request, including generating images, creating videos, 
+            and retrieving the video URL.
+
+    Example Usage:
+        processor = VideoCreationProcessor(
+            groq_api_key="your-api-key",
+            groq_interaction_model_id="model-id",
+            groq_notification_model_id="notification-model-id",
+            telegram_service=telegram_service_instance,
+            open_ai_service=open_ai_service_instance,
+            runway_service=runway_service_instance
+        )
+        processor.handle_content_request(topic, user_message)
+    """
     
     def __init__(self, groq_api_key, groq_interaction_model_id, groq_notification_model_id, telegram_service, open_ai_service, runway_service):
         self.groq_client = Groq(api_key=groq_api_key)

@@ -16,6 +16,36 @@ class EpisodicEventRegistrationRequest:
     created_at: datetime = datetime.now()
 
 class EpisodicEventProcessor:
+    """
+    A processor class for detecting and storing episodic memory events from conversations.
+
+    This class analyzes conversations to identify specific, memorable events that qualify as
+    episodic memories - those containing temporal context, location, or personal involvement.
+    Detected events are stored in a vector database for later retrieval and context.
+
+    Attributes:
+    EPISODIC_VECTARA_CORPUS_KEY (str): Constant defining the corpus key for episodic memories.
+    groq_client (Groq): Instance of Groq client for language processing.
+    groq_interaction_model_id (str): Model ID for event detection.
+    vectara_service: Service for vector database operations.
+    content_queue (Queue): Queue for processing memory events asynchronously.
+
+    Example:
+    ```python
+    processor = EpisodicEventProcessor(
+        groq_api_key="your_key",
+        groq_interaction_model_id="model_id",
+        vectara_service=vectara_service
+    )
+
+    # Process conversation for episodic events
+    processor.handle_content_request([
+        {"role": "user", "content": "Last summer, I visited Paris for the first time..."},
+        {"role": "assistant", "content": "That sounds wonderful! How was it?"},
+        {"role": "user", "content": "The Eiffel Tower was amazing at sunset..."}
+    ])
+    ```
+    """
     EPISODIC_VECTARA_CORPUS_KEY = "casey_episodic"
     
     def __init__(self, groq_api_key, groq_interaction_model_id, vectara_service):

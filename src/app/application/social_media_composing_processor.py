@@ -17,9 +17,62 @@ class SocialMediaCompositionRequest:
     created_at: datetime = datetime.now()
 
 class SocialMediaComposingProcessor:
+    """
+    A processor class for generating AI-powered social media content using various services and APIs.
+
+    This class orchestrates the creation of social media posts by combining news data, vector search,
+    and language model capabilities. It processes requests asynchronously using a queue system and
+    notifies users via Telegram when content is ready.
+
+    Attributes:
+        NEWS_VECTARA_CORPUS_KEY (str): Constant defining the corpus key for news articles.
+        client (Groq): Instance of Groq client for AI model interactions.
+        groq_interaction_model_id (str): Model ID for main content generation.
+        groq_notification_model_id (str): Model ID for notification messages.
+        telegram_service: Service for sending Telegram notifications.
+        news_service: Service for fetching news articles.
+        vectara_service: Service for vector search operations.
+        content_queue (Queue): Queue for processing content requests asynchronously.
+
+    Example:
+        ```python
+        processor = SocialMediaCompositionProcessor(
+            groq_api_key="your_key",
+            groq_interaction_model_id="model_id",
+            groq_notification_model_id="notification_model_id",
+            telegram_service=telegram_service,
+            news_service=news_service,
+            vectara_service=vectara_service
+        )
+
+        # Handle a content request
+        response = processor.handle_content_request(
+            topic={
+                "main_topic": "AI Technology",
+                "subtopics": ["Machine Learning", "Neural Networks"],
+                "target_audience": "Tech professionals",
+                "context": "Latest AI developments",
+                "tone": "Professional",
+                "complexity": "Technical"
+            },
+            last_user_message="Need a post about recent AI breakthroughs"
+        )
+        ```
+    """
     NEWS_VECTARA_CORPUS_KEY = 'casey_news'
 
     def __init__(self, groq_api_key, groq_interaction_model_id, groq_notification_model_id, telegram_service, news_service, vectara_service):
+        """
+        Initialize the SocialMediaCompositionProcessor with required services and API keys.
+
+        Args:
+            groq_api_key (str): API key for Groq service.
+            groq_interaction_model_id (str): Model ID for main content generation.
+            groq_notification_model_id (str): Model ID for notification messages.
+            telegram_service: Service instance for Telegram notifications.
+            news_service: Service instance for fetching news.
+            vectara_service: Service instance for vector search operations.
+        """
         self.client = Groq(api_key=groq_api_key)
         self.groq_interaction_model_id = groq_interaction_model_id
         self.groq_notification_model_id = groq_notification_model_id
@@ -270,20 +323,35 @@ Instagram:
         
         # self.vectara_service.remove_all_documents_and_data_in_a_corpus(self.NEWS_VECTARA_CORPUS_KEY)
 
-        print('Full Post Generation:\n\n', response.choices[0].message.content)
         return response.choices[0].message.content
     
     def handle_content_request(self, topic: dict, last_user_message: str) -> str:
-        """Handle a new content request"""
-        # Create content request
+        """
+        Handle a new content generation request asynchronously.
+
+        Creates a new request and adds it to the processing queue. Returns an immediate
+        response message while content generation continues in the background.
+
+        Args:
+            topic (dict): Dictionary containing content parameters including:
+                - main_topic (str): Primary topic for content
+                - subtopics (list): Related subtopics
+                - target_audience (str): Intended audience
+                - context (str): Content context
+                - tone (str): Desired tone
+                - complexity (str): Content complexity level
+            last_user_message (str): The user's most recent message for context
+
+        Returns:
+            str: A processing message indicating that content creation has begun
+
+        Note:
+            The actual content will be delivered via Telegram when ready.
+        """
         request = SocialMediaCompositionRequest(
             id=str(uuid.uuid4()),
             topic=topic,
             last_user_message=last_user_message
         )
-        
-        # Add to processing queue
         self.content_queue.put(request)
-        
-        # Generate immediate response
         return self.__generate_processing_message(topic, last_user_message)

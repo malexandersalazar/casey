@@ -20,34 +20,6 @@ class TelegramService:
         """
         self.api_token = api_token
         self.chat_id = chat_id
-
-
-    # def __escape_markdown_v2(self, text: str) -> str:
-    #     """
-    #     Escape special characters for Telegram's MarkdownV2 format while preserving formatting.
-    #     """
-    #     # First, let's preserve the bold headers by converting them
-    #     text = re.sub(r'\*\*([^\n]+?)\*\*', lambda m: f'⟦BOLD⟧{m.group(1)}⟦/BOLD⟧', text)
-        
-    #     # Escape special characters except those in our preserved tokens
-    #     parts = []
-    #     current_pos = 0
-    #     for match in re.finditer(r'⟦BOLD⟧.*?⟦/BOLD⟧', text, re.DOTALL):
-    #         # Add escaped text before the match
-    #         start, end = match.span()
-    #         if start > current_pos:
-    #             parts.append(re.sub(r'([_*\[\]()~`>#+\-=|{}.!])', r'\\\1', text[current_pos:start]))
-            
-    #         # Add the bold text with proper Telegram formatting
-    #         bold_text = text[start:end].replace('⟦BOLD⟧', '*').replace('⟦/BOLD⟧', '*')
-    #         parts.append(bold_text)
-    #         current_pos = end
-        
-    #     # Add any remaining text
-    #     if current_pos < len(text):
-    #         parts.append(re.sub(r'([_*\[\]()~`>#+\-=|{}.!])', r'\\\1', text[current_pos:]))
-        
-    #     return ''.join(parts)
     
     def __escape_markdown_v2(self, text: str) -> str:
         """

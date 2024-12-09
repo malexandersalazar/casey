@@ -16,7 +16,37 @@ class MemeContentRequest:
     created_at: datetime = datetime.now()
 
 class MemeCreationProcessor:
-    
+    """
+    A processor class for asynchronous meme creation using AI-powered text analysis.
+
+    This class processes user messages to automatically detect meme parameters, select appropriate
+    templates, and generate memes using the imgflip service. It handles requests asynchronously
+    and delivers results via Telegram notifications.
+
+    Attributes:
+    groq_client (Groq): Instance of Groq client for AI language processing.
+    groq_interaction_model_id (str): Model ID for meme parameter detection.
+    groq_notification_model_id (str): Model ID for notification messages.
+    imgflip_service: Service for meme template management and creation.
+    telegram_service: Service for sending notifications.
+    content_queue (Queue): Queue for processing meme requests asynchronously.
+
+    Example:
+    ```python
+    processor = MemeCreationProcessor(
+        groq_api_key="your_key",
+        groq_interaction_model_id="model_id",
+        groq_notification_model_id="notification_model_id",
+        imgflip_service=imgflip_service,
+        telegram_service=telegram_service
+    )
+
+    # Handle a meme creation request
+    response = processor.handle_content_request(
+        last_user_message="Make a distracted boyfriend meme about Python vs JavaScript"
+    )
+    ```
+    """    
     def __init__(self, groq_api_key, groq_interaction_model_id, groq_notification_model_id, imgflip_service, telegram_service):
         self.groq_client = Groq(api_key=groq_api_key)
         self.groq_interaction_model_id = groq_interaction_model_id

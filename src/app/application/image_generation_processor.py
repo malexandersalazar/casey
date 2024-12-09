@@ -16,6 +16,41 @@ class ImageGenerationRequest:
     created_at: datetime = datetime.now()
 
 class ImageGenerationProcessor:
+    """
+    A processor class for generating AI images using natural language descriptions.
+
+    This class processes user requests for image generation by analyzing their messages,
+    extracting or inferring image parameters, and using AI services to generate images.
+    It handles requests asynchronously and delivers results via Telegram notifications.
+
+    Attributes:
+    groq_client (Groq): Instance of Groq client for language processing.
+    groq_interaction_model_id (str): Model ID for parameter detection.
+    groq_notification_model_id (str): Model ID for notification messages.
+    telegram_service: Service for sending notifications.
+    open_ai_service: Service for AI image generation.
+    content_queue (Queue): Queue for processing image requests asynchronously.
+
+    Example:
+    ```python
+    processor = ImageGenerationProcessor(
+        groq_api_key="your_key",
+        groq_interaction_model_id="model_id",
+        groq_notification_model_id="notification_model_id",
+        telegram_service=telegram_service,
+        open_ai_service=open_ai_service
+    )
+
+    # Handle an image generation request
+    response = processor.handle_content_request(
+        topic={
+            "main_topic": "fantasy landscape",
+            "context": "ethereal mountain scene at sunset"
+        },
+        last_user_message="Create an image of misty mountains with a golden sky"
+    )
+    ```
+    """
     
     def __init__(self, groq_api_key, groq_interaction_model_id, groq_notification_model_id, telegram_service, open_ai_service):
         self.groq_client = Groq(api_key=groq_api_key)

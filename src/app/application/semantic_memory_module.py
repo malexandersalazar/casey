@@ -2,6 +2,36 @@ import re
 from groq import Groq
 
 class SemanticMemoryModule:
+    """
+    A module for extracting, processing, and storing semantic knowledge from text content.
+
+    This class processes raw text into discrete, self-contained facts and stores them in a vector
+    database for later retrieval. It uses AI language models to extract knowledge and maintains
+    semantic relationships while ensuring each fact is independently comprehensible.
+
+    Attributes:
+        SEMANTIC_VECTARA_CORPUS_KEY (str): Constant defining the corpus key for semantic knowledge storage.
+        groq_client (Groq): Instance of Groq client for AI model interactions.
+        groq_interaction_model_id (str): Model ID for knowledge extraction.
+        vectara_service: Service for vector database operations.
+
+    Example:
+        ```python
+        memory = SemanticMemoryModule(
+            groq_api_key="your_key",
+            groq_interaction_model_id="model_id",
+            vectara_service=vectara_service
+        )
+
+        # Store knowledge from content
+        memory.crystallize_knowledge(
+            title="AI Research Paper",
+            reason="Research findings",
+            source="academic_paper",
+            content="Detailed paper content..."
+        )
+        ```
+    """
     SEMANTIC_VECTARA_CORPUS_KEY = 'casey_semantic'
 
     def __init__(self, groq_api_key, groq_interaction_model_id, vectara_service):
