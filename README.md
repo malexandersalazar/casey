@@ -111,9 +111,10 @@ Major components:
 - `groq`: LLM integration
 - `openai`: DALL-E integration
 - `runwayml`: Video generation
-- `azure-cognitiveservices-speech`: Speech recognition
+- `azure-cognitiveservices-speech`: text to speech (TTS)
+- `whisper`: speech recognition/transcription
 - `langchain`: Text processing
-- `torch`: Machine learning operations
+- `vectara`: RAG, advanced vector search and embeddings
 
 Full dependencies are listed in `requirements.txt`
 
