@@ -62,7 +62,7 @@ def run_casey_listen_and_talks():
     )
 
     casey_listen = CaseyListenAndTalks(
-        os.environ.get("APP_LANG"), interaction_manager, window_duration=30
+        os.environ.get("APP_LANG"), interaction_manager, 120
     )
     casey_listen.run()
 

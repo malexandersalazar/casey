@@ -162,3 +162,5 @@ cython_debug/
 # Custom
 *.private.md
 *.private.csv
+captured_emotions/
+transcripts/

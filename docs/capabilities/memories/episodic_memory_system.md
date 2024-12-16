@@ -1,5 +1,7 @@
 ## Episodic Memory System
 
+Think of episodic memory as a personal diary for each user. When someone shares significant moments of their life with Casey - like "I graduated last week" or "I've been struggling with anxiety since my mother passed away" - Casey stores these important personal experiences. This isn't just data storage; it's contextual memory that helps Casey understand the user's personal journey. For example, in future conversations, Casey can reference these experiences ("When you mentioned graduating last week...") or understand the context of current emotions ("I remember you sharing about your loss..."), making interactions more personalized and meaningful.
+
 ### Purpose
 Records significant personal experiences and interactions, enabling:
 - Personal context awareness

@@ -1,5 +1,13 @@
 ## Semantic Memory System
 
+Semantic memory is Casey's adaptive knowledge system that can be specialized for any field or domain. It's like a sophisticated knowledge base that:
+
+Can be loaded with specialized content from any field (psychology, history, science, literature, etc.)
+Processes and organizes this information for relevant retrieval
+Learns from interactions to improve understanding and responses
+
+While Casey's semantic memory system is technologically capable of handling any domain of knowledge, we've currently focused it on mental wellbeing by loading it with professional psychological resources, mental health publications, and evidence-based guides. This focus wasn't chosen because of technical limitations, but because we recognize the urgent need for accessible mental health support in vulnerable populations.
+
 ### Purpose
 Stores processed knowledge and conclusions derived from content creation and interactions, enabling:
 - Knowledge accumulation over time
