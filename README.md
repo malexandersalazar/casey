@@ -1,9 +1,17 @@
-# Casey: Voice-Activated AI Companion for Mental Wellbeing & Content Creation
 
-[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+<h1 align="center">
+  <img width="100%" src="./casey.gif" alt="Casey">
+  <br>
+  <br>
+  Casey
+</h1>
 
-## Overview
+_<p align="center">Voice-Activated AI Companion for Mental Wellbeing & Content Creation</p>_
+
+<p align="center">
+  <a href="https://www.python.org/downloads"><img src="https://img.shields.io/badge/python-3.10%2B-blue.svg" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" /></a>
+</p>
 
 Casey is a voice-activated AI companion powered by an advanced dual memory system that enables both personalized interactions and specialized knowledge applications. While currently focused on mental wellbeing support, Casey's semantic memory system is designed to process and utilize knowledge from any specialized field - from psychology to literature, science, or history. We've chosen to prioritize mental health support by loading it with professional psychological resources, making it particularly valuable for vulnerable populations with limited access to mental health resources.
 
@@ -11,8 +19,6 @@ Through its unique episodic memory system, Casey remembers your significant life
 
 These advanced memory capabilities work alongside powerful language models, computer vision, and speech processing technologies to create a companion that adapts to your needs. Casey helps you create and manage multi-format content hands-free, making it valuable for professionals who need hands-free content creation and those requiring accessibility accommodations. Through natural voice interaction, Casey eliminates the need for typing or technical expertise, offering both evidence-based support and practical assistance.
 The combination of episodic and semantic memory systems makes Casey highly adaptable, with the potential to serve as a specialized companion across various knowledge domains. Our current focus on mental wellbeing reflects an urgent social need rather than a technical limitation of the system.
-
-![Casey](./casey.png)
 
 ## Key Features
 
