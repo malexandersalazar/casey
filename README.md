@@ -12,7 +12,7 @@ Through its unique episodic memory system, Casey remembers your significant life
 These advanced memory capabilities work alongside powerful language models, computer vision, and speech processing technologies to create a companion that adapts to your needs. Casey helps you create and manage multi-format content hands-free, making it valuable for professionals who need hands-free content creation and those requiring accessibility accommodations. Through natural voice interaction, Casey eliminates the need for typing or technical expertise, offering both evidence-based support and practical assistance.
 The combination of episodic and semantic memory systems makes Casey highly adaptable, with the potential to serve as a specialized companion across various knowledge domains. Our current focus on mental wellbeing reflects an urgent social need rather than a technical limitation of the system.
 
-Here's an updated and more comprehensive list of key features that better reflects Casey's full capabilities:
+![Casey](./casey.png)
 
 ## Key Features
 
@@ -130,42 +130,6 @@ python program.py
 - RAM: 64GB
 - GPU: NVIDIA GPU with 24GB VRAM
 
-## Technical Stack
-
-Full dependencies are listed in `requirements.txt`
-
-### Core AI Systems
-
-1. **Language Processing**
-   - Groq LLM for content generation and intent detection
-   - Azure Cognitive Services for text-to-speech (TTS)
-   - Whisper for speech recognition and transcription
-
-2. **Memory Systems**
-   - Vectara for:
-     - Vector database management
-     - Semantic search capabilities
-     - RAG (Retrieval-Augmented Generation)
-     - Advanced embeddings
-
-3. **Multimodal Generation**
-   - OpenAI's DALL-E for image generation
-   - RunwayML for video content
-   - Imgflip API for meme creation
-
-### Infrastructure
-
-1. **Backend Core**
-   - Language: Python
-   - Processing: Asynchronous architecture
-     - Threading system
-     - Queue management
-   - Data Formats: JSON, XML
-
-2. **External Integrations**
-   - Bing News API for current news/events
-   - Telegram API for content delivery/distribution
-
 ## Project Structure
 
 ```
@@ -205,12 +169,6 @@ Full dependencies are listed in `requirements.txt`
         └── notebooks
             └── images
 ```
-
-## Documentation
-
-Detailed documentation is available in the `docs` folder:
-- [Workflow Documentation](./docs/workflows)
-- [Architecture Diagrams](./docs/diagrams)
 
 ## Real-World Potential Use Cases
 
@@ -280,6 +238,10 @@ Detailed documentation is available in the `docs` folder:
     - Guided breathing and calming exercises
     - Connection to emergency services when needed
     - Consistent support during recovery periods
+
+## Documentation
+
+Detailed documentation is available in the [`docs`](./docs) folder:
 
 ## License
 

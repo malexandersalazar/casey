@@ -28,7 +28,7 @@ class EVELEDAnimator {
         this.app = new PIXI.Application({
             width: window.innerWidth,
             height: window.innerHeight,
-            backgroundColor: 0x000000,
+            backgroundColor: 0xFFFFFF,
             resolution: window.devicePixelRatio || 1,
             autoDensity: true,
             resizeTo: window
@@ -99,15 +99,15 @@ class EVELEDAnimator {
         this.createLEDEyes();
 
         this.blinkProgress = 0;
-        this.blinkInterval = getRandomInterval(3000, 7500);
+        this.blinkInterval = getRandomInterval(4000, 10000);
         this.lastBlinkTime = Date.now();
         this.blinkAgain = false;
 
         this.app.ticker.add(() => this.animate());
         this.resize();
 
-        this.centerColor = 0x53AFF1;
-        this.edgeColor = 0xFF0000;
+        this.centerColor = 0xFE007A;//0x53AFF1;
+        this.edgeColor = 0xFFFFFF;
     }
 
     resize() {
@@ -123,7 +123,7 @@ class EVELEDAnimator {
             for (let y = 0; y < this.maxHeight; y++) {
                 for (let x = 0; x < this.maxWidth; x++) {
                     const led = new PIXI.Graphics();
-                    led.beginFill(0x53AFF1);
+                    led.beginFill(0xFE007A);
                     led.drawRect(0, 0, this.ledSize, this.ledSize);
                     led.endFill();
                     led.x = x * (this.ledSize + this.ledSpacing);
@@ -245,7 +245,8 @@ class EVELEDAnimator {
                     const yOffset = currentEyeData.curve * distanceFromCenter * currentEyeData.height * 0.5;
                     led.y = y * (this.ledSize + this.ledSpacing) + yOffset;
 
-                    let brightness = Math.min(currentEyeData.intensity * (1 - this.blinkProgress), 1);
+                    // let brightness = Math.min(currentEyeData.intensity * (1 - this.blinkProgress), 1);
+                    let brightness = Math.min(1.0 * (1 - this.blinkProgress), 1);
 
                     const distanceFromEdge = 1 - Math.sqrt(
                         ((x - (this.maxWidth - currentEyeData.width) / 2) - currentEyeData.width / 2) ** 2 / (currentEyeData.width ** 2 / 4) +
@@ -255,7 +256,7 @@ class EVELEDAnimator {
                     if (distanceFromEdge < currentEyeData.edge) {
                         const colorFactor = Math.pow(distanceFromEdge, 0);
                         const ledColor = this.lerpColor(this.edgeColor, this.centerColor, colorFactor);
-                        const finalColor = this.lerpColor(0x000000, ledColor, brightness);
+                        const finalColor = this.lerpColor(0xFFFFFF, ledColor, brightness);
                         led.tint = finalColor;
 
                         const shadowFactor = (currentEyeData.edge - distanceFromEdge) / currentEyeData.edge;
