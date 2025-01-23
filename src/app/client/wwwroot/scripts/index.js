@@ -148,8 +148,9 @@ class EVELEDAnimator {
     }
 
     setEmotions(emotionMap, dominantEmotion) {
-        const total = Object.values(emotionMap).reduce((sum, value) => sum + value, 0);
         const normalizedEmotions = {};
+
+        const total = Object.values(emotionMap).reduce((sum, value) => sum + value, 0);
         for (const [emotion, value] of Object.entries(emotionMap)) {
             normalizedEmotions[emotion] = value / total;
         }

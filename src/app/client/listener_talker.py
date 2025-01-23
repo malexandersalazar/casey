@@ -5,13 +5,13 @@ import traceback
 import numpy as np
 import pandas as pd
 from queue import Queue
+from pathlib import Path
 from threading import Thread
 from datetime import datetime
 
 import wave
 import whisper
 import pyaudio
-from groq import Groq
 import azure.cognitiveservices.speech as speechsdk
 
 
@@ -21,11 +21,19 @@ class CaseyListenAndTalks:
         app_lang,
         interaction_manager,
         window_duration,
+        azure_speech_subscription_key,
         transcript_folder="client/data/transcripts",
     ):
         self.app_lang = app_lang
         self.interaction_manager = interaction_manager
         self.transcript_folder = transcript_folder
+
+        current_dir = Path().resolve()
+        while not current_dir.name.endswith("casey"):
+            current_dir = current_dir.parent
+        os.chdir(current_dir)
+
+        self.transcript_folder = current_dir / 'src/app' / self.transcript_folder
         os.makedirs(self.transcript_folder, exist_ok=True)
 
         # Listen
@@ -37,7 +45,7 @@ class CaseyListenAndTalks:
         self.audio_queue = Queue()
         self.is_recording = False
         self.is_talking = False
-        self.model = whisper.load_model("medium")  # Load the Whisper model
+        self.model = whisper.load_model("large-v3-turbo")  # Load the Whisper model
         self.model.to("cuda:0")
         print("Whisper device", self.model.device)
 
@@ -179,8 +187,8 @@ During conversations, you never mention the XML tags or the timestamp format."""
         self.actual_messages = self.base_messages.copy()
 
         speech_config = speechsdk.SpeechConfig(
-            "1Zuv0yVJfOCj1PuRmYFz5cMoELaXBPx69FvKeYfZNgKW47TzYQmWJQQJ99AKACYeBjFXJ3w3AAAYACOGf0eG",
-            region="eastus",
+            azure_speech_subscription_key,
+            "eastus",
         )
         audio_config = speechsdk.audio.AudioOutputConfig(use_default_speaker=True)
         if self.app_lang == 'en':
@@ -189,7 +197,7 @@ During conversations, you never mention the XML tags or the timestamp format."""
         elif self.app_lang == 'es':
             speech_config.speech_synthesis_language = "es-ES"
             # speech_config.speech_synthesis_voice_name='es-ES-XimenaMultilingualNeural' # Woman Voice (es)
-            speech_config.speech_synthesis_voice_name = 'es-MX-MarinaNeural' # Child Voice (girl, es)
+            speech_config.speech_synthesis_voice_name = 'es-MX-MarinaNeural' # Girl Voice (es)
 
         self.speech_synthesizer = speechsdk.SpeechSynthesizer(
             speech_config=speech_config, audio_config=audio_config
@@ -218,7 +226,7 @@ During conversations, you never mention the XML tags or the timestamp format."""
             channels=self.channels,
             rate=self.rate,
             input=True,
-            input_device_index=4,
+            input_device_index=3,
             frames_per_buffer=self.chunk,
         )
 
@@ -228,6 +236,8 @@ During conversations, you never mention the XML tags or the timestamp format."""
             if not self.is_talking:
                 data = stream.read(self.chunk)
                 self.audio_queue.put(data)
+            # time.sleep(0.01)
+            # time.sleep(1)
 
         stream.stop_stream()
         stream.close()
@@ -248,7 +258,7 @@ During conversations, you never mention the XML tags or the timestamp format."""
     def save_transcript(self, text, timestamp):
         """Save the transcript to the output folder."""
         output_filename = os.path.join(
-            self.transcript_folder, f"transcript_{timestamp:.2f}.txt"
+            self.transcript_folder, f"transcript_{timestamp}.txt"
         )
         with open(output_filename, "w", encoding="utf-8") as f:
             f.write(text)
@@ -259,7 +269,7 @@ During conversations, you never mention the XML tags or the timestamp format."""
         return re.search(r"[.!?]\s*$", text) is not None
 
     def process_audio(self):
-        print("Processing audio...")
+        print("Init audio process...")
         while self.is_recording or not self.audio_queue.empty():
             if not self.audio_queue.empty():
                 chunk = self.audio_queue.get()
@@ -270,18 +280,22 @@ During conversations, you never mention the XML tags or the timestamp format."""
                     is_silent = self.is_silence(b"".join(self.current_chunk))
 
                     if not is_silent:
+                        print('Is not silent')
                         # If there's audio, add to listening chunks
                         self.listening_chunks.extend(self.current_chunk)
                     else:
+                        print('Is silent')
                         # If silent and we have accumulated listening chunks, process them
                         if self.listening_chunks:
-                            temp_filename = f"temp_audio_{time.time():.2f}.wav"
+                            current_time = int(time.time())
+                            temp_filename = f"temp_audio_{current_time}.wav"
                             self.save_audio(temp_filename, self.listening_chunks)
 
                             # Process the audio
+                            start_time = time.time()
                             audio = whisper.load_audio(temp_filename)
                             audio = whisper.pad_or_trim(audio)
-                            mel = whisper.log_mel_spectrogram(audio).to(
+                            mel = whisper.log_mel_spectrogram(audio, n_mels=128).to(
                                 self.model.device
                             )
                             options = whisper.DecodingOptions(
@@ -289,6 +303,10 @@ During conversations, you never mention the XML tags or the timestamp format."""
                             )
                             result = whisper.decode(self.model, mel, options)
                             recognized_text = result.text.strip()
+                            end_time = time.time()
+
+                            elapsed_time = end_time - start_time
+                            print("Elapsed time:", elapsed_time, "seconds")
 
                             if recognized_text in [
                                 "¡Suscríbete al canal!",
@@ -297,10 +315,9 @@ During conversations, you never mention the XML tags or the timestamp format."""
                                 ".",
                                 'Gracias.'
                             ]:
-                                os.remove(temp_filename)
+                                # os.remove(temp_filename)
                                 continue
 
-                            current_time = time.time()
                             if recognized_text:
                                 self.sliding_window.append(
                                     (current_time, recognized_text)
@@ -319,7 +336,7 @@ During conversations, you never mention the XML tags or the timestamp format."""
 
                             self.last_chunk_end = current_time
                             self.listening_chunks = []  # Reset listening chunks
-                            os.remove(temp_filename)
+                            # os.remove(temp_filename)
 
                     # Reset current chunk after checking
                     self.current_chunk = []
@@ -419,8 +436,11 @@ During conversations, you never mention the XML tags or the timestamp format."""
 
     def talk(self, content):
         try:
+            print('Casey is talking...')
             self.is_talking = True
             self.speech_synthesizer.speak_text_async(content).get()
+        except Exception as e:
+            print(f"Error talking: {e}")
         finally:
             self.is_talking = False
 

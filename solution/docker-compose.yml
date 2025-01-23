@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  # Backend services
+  cybernetics_core:
+    build: 
+      context: ./backend/microservices/cybernetics_core
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    networks:
+      - cross-cutting-network
+    environment:
+      - LOG_LEVEL=INFO  # or DEBUG, WARNING, ERROR
+      - LOG_FORMAT=%(asctime)s - %(name)s - %(levelname)s - %(message)s
+      - LOG_DIR=/app/logs
+      - APP_ENV=${APP_ENV}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - GROQ_INTERACTION_MODEL_NAME=${GROQ_INTERACTION_MODEL_NAME}
+      - GROQ_INTERACTION_TEMPERATURE=${GROQ_INTERACTION_TEMPERATURE}
+      - AZURE_SPEECH_SUBSCRIPTION_KEY=${AZURE_SPEECH_SUBSCRIPTION_KEY}
+    volumes:
+      - ./backend/microservices/cybernetics_core:/app
+      - ./backend/microservices/cybernetics_core/logs:/app/logs
+
+  # Frontend services
+  chat-client:
+    build: 
+      context: ./frontend/clients/chat-client
+      dockerfile: Dockerfile
+    ports:
+      - "4173:4173"
+    networks:
+      - cross-cutting-network
+    environment:
+      - APP_ENV=development
+    volumes:
+      - ./frontend/clients/chat-client:/app
+      - node_modules:/app/node_modules
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    restart: unless-stopped
+    depends_on:
+      - cybernetics_core
+      - chat-client
+    command:
+      - "start"
+      - "--all"
+      - "--config"
+      - "/etc/ngrok.yml"
+    volumes:
+      - C:/Users/Alexander/AppData/Local/ngrok/ngrok.yml:/etc/ngrok.yml
+    ports:
+      - "4040:4040"
+    networks:
+      - cross-cutting-network
+
+volumes:
+  node_modules:
+
+networks:
+  cross-cutting-network:
+    driver: bridge

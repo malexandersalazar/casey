@@ -1,0 +1,5 @@
+.venv
+.dockerignore
+Dockerfile
+temp*/
+logs/

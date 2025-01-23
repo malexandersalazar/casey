@@ -5,7 +5,7 @@ import subprocess
 from dotenv import load_dotenv
 
 from client import CaseyListenAndTalks
-from application import (
+from logic import (
     InteractionManager,
     TelegramService,
     NewsService,
@@ -14,7 +14,7 @@ from application import (
     OpenAIService,
     RunwayService
 )
-from application import (
+from logic import (
     SemanticMemoryModule
 )
 
@@ -62,7 +62,7 @@ def run_casey_listen_and_talks():
     )
 
     casey_listen = CaseyListenAndTalks(
-        os.environ.get("APP_LANG"), interaction_manager, 120
+        os.environ.get("APP_LANG"), interaction_manager, 120, os.environ.get("AZURE_SPEECH_SUBSCRIPTION_KEY")
     )
     casey_listen.run()
 
